@@ -13,15 +13,7 @@ const LikeButton = ({ onClick }: Props) => {
   };
 
   return (
-    <button
-      onClick={toggle}
-      style={{
-        background: "none",
-        border: "none",
-        padding: 0,
-        cursor: "pointer",
-      }}
-    >
+    <button onClick={toggle}>
       {status ? (
         <AiFillHeart size={20} color="#ff6b81" />
       ) : (
