@@ -1,9 +1,9 @@
-import Form from "./components/Form";
+import ExpenseTracker from "./components/ExpenseTracker.tsx";
 
 function App() {
   return (
     <div>
-      <Form></Form>
+      <ExpenseTracker />
     </div>
   );
 }
