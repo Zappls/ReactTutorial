@@ -1,14 +1,14 @@
-import { FieldValues, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 const schema = z.object({
   description: z.string({ invalid_type_error: "Description is required." }),
   amount: z
     .number({ invalid_type_error: "Amount is required." })
     .min(1, { message: "The minimum amount is one." }),
-  category: z.string({ invalid_type_error: "Category is required." }),
-  all_category: z.string(),
+  category: z.string().min(1, { message: "Category is required." }),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -17,14 +17,23 @@ const ExpenseTracker = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  //need to find out how to work with data
+  const [listData, setListData] = useState<FormData[]>([]);
+  const [filter, setFilter] = useState<string>("AllCategories");
 
-  let listData: FieldValues = {};
-  const onSubmit = (data: FieldValues) => listData.push(data);
-  console.log(listData);
+  const onSubmit = (data: FormData) =>
+    setListData((prevData) => [...prevData, data]);
+
+  const filteredData =
+    filter === "AllCategories"
+      ? listData
+      : listData.filter((item) => item.category === filter);
+
+  const handleDelete = (index: number) => {
+    setListData((prevData) => prevData.filter((_, i) => i !== index));
+  };
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -83,10 +92,10 @@ const ExpenseTracker = () => {
       </form>
       <div className="mb-3 mt-3">
         <select
-          {...register("all_category")}
           id="all-category-select"
           className="form-control"
-          required
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
         >
           <option hidden></option>
           <option value="AllCategories">All Categories</option>
@@ -99,7 +108,33 @@ const ExpenseTracker = () => {
         )}
       </div>
       <div>
-        <ul className="list-group"></ul>
+        <table className="table mt-3">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Category</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredData.map((item, index) => (
+              <tr key={index}>
+                <td>{item.description}</td>
+                <td>{item.amount}</td>
+                <td>{item.category}</td>
+                <td>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(index)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </>
   );
