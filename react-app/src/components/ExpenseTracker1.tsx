@@ -30,7 +30,7 @@ const ExpenseTracker = () => {
     filter === "AllCategories"
       ? listData
       : listData.filter((item) => item.category === filter);
-
+  console.log(filteredData);
   const handleDelete = (index: number) => {
     setListData((prevData) => prevData.filter((_, i) => i !== index));
   };
@@ -121,7 +121,7 @@ const ExpenseTracker = () => {
             {filteredData.map((item, index) => (
               <tr key={index}>
                 <td>{item.description}</td>
-                <td>{item.amount}</td>
+                <td>{item.amount} €</td>
                 <td>{item.category}</td>
                 <td>
                   <button
