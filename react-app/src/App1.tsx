@@ -7,6 +7,7 @@ import { BsChevronCompactRight } from "react-icons/bs";
 import LikeButton from "./components/LikeButton";
 import ExpandableText from "./components/ExpandableText";
 
+
 function App() {
   const [cartItems, setCartItems] = useState(["Product1", "Product2"]);
   const [alertVisible, setAlertVisibility] = useState(false);
